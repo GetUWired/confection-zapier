@@ -12,7 +12,7 @@ const perform = (z, bundle) => {
       if (!lastTimestamp)
         lastTimestamp = currentTime - 900;
       //options for request, use zapier endpoint to hit between last time and now.
-      const url = `https://transmission.confection.io/${bundle.authData.account_id}/leads/event/${bundle.inputData.eventName}/between/${lastTimestamp}/${currentTime}/`
+      const url = `https://transmission.confection.io/${bundle.authData.account_id}/leads/field/${bundle.inputData.triggerField}/between/${lastTimestamp}/${currentTime}/`
       //url = url + `/between/${lastTimestamp}/${currentTime}`;
       const options = {
         url: url,
@@ -45,8 +45,7 @@ const perform = (z, bundle) => {
             for (const [key, value] of Object.entries(allResults)) {
               var data = value;
               data.UUID = key;
-              var id = key + "-" + data.updated_time
-              output.push({ id: id, event_data: data });
+              output.push({ id: key, lead_data: data });
             }
 
             return output;
@@ -59,29 +58,28 @@ const perform = (z, bundle) => {
 }//end of perform
 
 module.exports = {
-  key: 'new_event',
-  noun: 'Event',
+  key: 'new_field_value',
+  noun: 'Lead',
 
   display: {
-    label: 'New Event',
-    description: 'Triggers when any UUID receives a value for a defined event name. The latest value as well a history of all values ever received for that event name will be returned.'
+    label: 'New Lead',
+    description: 'Triggers when a UUID is significant enough to be classified as a lead. You define the field of significance and if a UUID gets a value for this field, the zap will trigger.'
   },
 
   operation: {
     perform,
     canPaginate: true,
     type: 'polling',
-    // `inputFields` defines the fields a user could provide
-    // Zapier will pass them in as `bundle.inputData` later. They're optional.
+
     inputFields: [
       {
-        key: 'eventName',
+        key: 'triggerField',
         type: 'string',
-        label: 'Event Name',
+        label: 'Field of Significance',
         helpText:
-          "Provide the event name to watch. All accounts have 'loadtime' & 'pageviewBatch' events by default.",
+          "Define a field to be used to indicate that a UUID is significant enough to be a lead. You must enter the form input name which Confection uses as the api name of the field.",
         required: true,
-        placeholder: 'pageviewBatch',
+        default: 'email',
         list: false,
         altersDynamicFields: false,
       },
@@ -90,23 +88,19 @@ module.exports = {
         type: 'copy',
         label: 'Help Text',
         helpText:
-          "To learn more about sending custom events, please visit [https://confection.io/quick-start/zapier](https://confection.io/quick-start/zapier)",
+          "To learn more about how Confection manages fields, please visit [https://confection.io/quick-start/zapier](https://confection.io/quick-start/zapier)",
       }
     ],
 
     sample: {
-      "id": "02000201-0e19-4108-941a-79de9884fb1b-1629143044",
-      "event_data": {
+      id: "02000201-0e19-4108-941a-79de9884fb1b-1629143044",
+      lead_data: {
         "updated_time": "1629143044",
-        "value":
-          { "url": "https:\/\/zapier.com", "language": "en-US", "device": "desktop", "browser": "Chrome 92.0 MacOSX Desktop" },
-        "history": {
-          "1":
-            { "url": "https:\/\/zapier.com", "language": "en-US", "device": "desktop", "browser": "Chrome 92.0 MacOSX Desktop" }
-        },
+        "value": "This is the value of the field that triggered the Zap!",
+        "history": ["Any historical values for the field will end up here!"],
         "UUID": "02000201-0e19-4108-941a-79de9884fb1b"
       }
-
     },
+
   }
 };

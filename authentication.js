@@ -22,21 +22,26 @@ module.exports = {
   test: testAuth,
   fields: [
     {
+      key: 'description',
+      required: false,
+      type: 'copy',
+      helpText: 'Your API information can be found by going to the API Keys section in your account https://dashboard.confection.io/my-keys/. If you don\'t have an account, visit https://dashboard.confection.io/register to set one up.'
+    },
+    {
       computed: false,
       key: 'account_id',
       required: true,
       label: 'Account Id',
       type: 'string',
-      helpText:
-        'Your API information can be found by going to the API Keys section in your account https://dashboard.confection.io/my-keys/ ',
     },
     {
       computed: false,
       key: 'secret_key',
       required: true,
       label: 'Secret Key',
-      type: 'password',
-    },
+      type: 'string',
+    }
   ],
   customConfig: {},
+  connectionLabel: 'Confection'
 };

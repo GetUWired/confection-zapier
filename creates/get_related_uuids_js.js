@@ -37,7 +37,7 @@ module.exports = {
   noun: 'Get_related_uuids.js',
   display: {
     label: 'Get All Related UUIDs',
-    description: 'Will retreive all UUIDs that have a likeness score of at least 50 with the provided UUID.'
+    description: 'This action will retreive all UUIDs that have a likeness score of at least 50 (default) with the provided UUID. The likeness score can be customized in configuration.'
   },
 
   operation: {
@@ -68,10 +68,21 @@ module.exports = {
         list: false,
         choices: { true: "Yes", false: "No" },
         altersDynamicFields: false,
-        default: "No",
-        helpText: "If set to 'No', Zap exuction will be halted when no related UUIDs are found"
+        default: "false",
+        helpText: "If set to 'No', Zap exuction will be halted when no related UUIDs are found and any subsequent steps that rely on data from this step will not be run."
       },
     ],
-
+    sample: {
+      uuid: "02000201-0e13-4e08-a409-31561ba98a1a",
+      created_time: 1630333154,
+      ip: {
+        1630333154: "11.11.111.111"
+      },
+      browser: "Chrome 92.0 MacOSX Desktop",
+      email: ["test@test.com"],
+      related: [
+        { uuid: "02000201-0e19-4108-941a-79de9884fb1b", created_time: 1629995099, ip: { 1629995099: "11.11.111.111" }, browser: "Chrome 92.0 MacOSX Desktop", email: ["test@test.com", "test2@test.com"], likeness: 65 }
+      ]
+    }
   }
 };
